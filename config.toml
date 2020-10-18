@@ -140,10 +140,7 @@ disqusShortname = ""
     enable = true
     title = "A little bit about me"
     subtitle = """My name is Marton Szaloky and I am originally from the capital of Hungary, Budapest. 
-    However, I have also spent some time living in Atlanta, GA and have recently relocated to London tp pursue a master's degree at London Business School. 
-    Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. 
-    Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero.
-    Mauris aliquet magna magna sed nunc rhoncus amet pharetra et feugiat tempus."""
+    However, I have spent some time in the US as well and have recently relocated to London to pursue a master's degree at London Business School."""
     buttonText = "Check out my CV"
     url = "blogs"
 
