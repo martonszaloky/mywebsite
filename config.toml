@@ -82,7 +82,7 @@ disqusShortname = ""
     # To change the background image on the homepage banner, replace 'banner.jpg' in
     # the 'static/img' folder.
     title = "Hi, my name is Marton"
-    subtitle = "I have set up this portfolio website to show some of the things I can do in R"
+    subtitle = "I have set up this website to showcase some of the things I can do in R"
     buttonText = "See some examples"
 
 
@@ -140,9 +140,11 @@ disqusShortname = ""
     enable = true
     title = "A little bit about me"
     subtitle = """My name is Marton Szaloky and I am originally from the capital of Hungary, Budapest. 
-    However, I have spent some time in the US as well and have recently relocated to London to pursue a master's degree at London Business School."""
-    buttonText = "Check out my CV"
-    url = "blogs"
+    However, I have spent some time in the US as well and have recently relocated to London to pursue a master's degree at London Business School.
+    Previously I have interned at Nielsen, in various roles at Morgan Stanley, in the treasury department of KBC Bank's Hungarian subsidiary and have worked full-time at Invescom, an independent M&A advisor active in the CEE.
+    Right now, I am searching for the next logical step in my career."""
+    buttonText = "Go to top"
+    # url = "blogs"
 
 
   # Contact section
