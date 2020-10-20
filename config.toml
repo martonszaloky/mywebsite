@@ -92,8 +92,8 @@ disqusShortname = ""
     # Display your showcases here.
     
     [[params.tiles.showcase]]
-      title = "Example 1"
-      subtitle = "Ipsum Dolor Sit Amet"
+      title = "Mapping COVID-19 Data"
+      subtitle = "Demographic data of co-morbidities and ICU hospitalization"
       image = "pic01.jpg"
       url = "blogs/Example_Name"
 
