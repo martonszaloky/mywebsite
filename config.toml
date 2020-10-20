@@ -98,8 +98,8 @@ disqusShortname = ""
       url = "blogs/Example_Name"
 
     [[params.tiles.showcase]]
-      title = "Example 2"
-      subtitle = "Feugiat Amet Tempus"
+      title = "GDP Components"
+      subtitle = "Tracking changes within the GDPs of nations around the world over time"
       image = "pic02.jpg"
       url = "blogs/tempus"
 

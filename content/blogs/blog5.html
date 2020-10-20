@@ -15,16 +15,7 @@ title: Mapping COVID-19 Data
 
 <div id="cdc-covid-19-public-use-data" class="section level1">
 <h1>CDC COVID-19 Public Use Data</h1>
-<p>Let us revisit the <a href="https://data.cdc.gov/Case-Surveillance/COVID-19-Case-Surveillance-Public-Use-Data/vbim-akqf">CDC Covid-19 Case Surveillance Data</a>. There are well over 3 million entries of individual, de-identified patient data. Since this is a large file, I suggest you use <code>vroom</code> to load it and you keep <code>cache=TRUE</code> in the chunk options.</p>
-<pre class="r"><code># file contains 11 variables and 3.66m rows and is well over 380Mb. 
-# It will take time to download
-
-# URL link to CDC to download data
-url &lt;- &quot;https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&quot;
-
-covid_data &lt;- vroom::vroom(url)%&gt;% # If vroom::vroom(url) doesn&#39;t work, use read_csv(url)
-  clean_names()
-  glimpse(covid_data)</code></pre>
+<p>For the following two graphs I have used the <a href="https://data.cdc.gov/Case-Surveillance/COVID-19-Case-Surveillance-Public-Use-Data/vbim-akqf">CDC Covid-19 Case Surveillance Data</a>. There are over 3 million entries of individual, de-identified patient data. Since this is a large file, I used <code>vroom</code> to load it and kept <code>cache=TRUE</code> in the chunk options.</p>
 <pre><code>## Rows: 4,481,062
 ## Columns: 11
 ## $ cdc_report_dt               &lt;date&gt; 2020-03-22, 2020-03-23, 2020-03-15, 20...
@@ -38,11 +29,12 @@ covid_data &lt;- vroom::vroom(url)%&gt;% # If vroom::vroom(url) doesn&#39;t work
 ## $ icu_yn                      &lt;chr&gt; &quot;Yes&quot;, &quot;Unknown&quot;, &quot;Missing&quot;, &quot;Missing&quot;,...
 ## $ death_yn                    &lt;chr&gt; &quot;No&quot;, &quot;Unknown&quot;, &quot;Missing&quot;, &quot;Missing&quot;, ...
 ## $ medcond_yn                  &lt;chr&gt; &quot;Yes&quot;, &quot;Unknown&quot;, &quot;Missing&quot;, &quot;Missing&quot;,...</code></pre>
-<p>Given the data we have, I would like you to produce two graphs that show death % rate:</p>
+<p>I produced two graphs that show death % rate:</p>
 <ol style="list-style-type: decimal">
 <li>by age group, sex, and whether the patient had co-morbidities or not</li>
 <li>by age group, sex, and whether the patient was admited to Intensive Care Unit (ICU) or not.</li>
 </ol>
+<p>Below you can find both the graphs and the codes used to produce them.</p>
 <pre class="r"><code>## Creating graph no. 1 
 
 # Step 1: filtering variables of interest to exclude missing values
