@@ -1,14 +1,14 @@
 ---
-categories:
-- ""
-- ""
-date: "2017-10-31T21:28:43-05:00"
-description: ""
-draft: false
+title: "Mapping COVID-19 Data"
+date: '2017-10-31T21:28:43-05:00'
+description: ''
+draft: no
 image: pic10.jpg
-keywords: ""
+keywords: ''
 slug: Example_Name2
-title: Mapping COVID-19 Data
+categories:
+- ''
+- ''
 ---
 
 
@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
 
 
 ```{r load-libraries, echo=FALSE}
-library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(tidyverse)
 library(mosaic)
 library(ggthemes)
 library(GGally)
@@ -45,7 +45,6 @@ library(openintro)
 library(tidyquant)
 library(infer)
 ```
-
 
 # Challenge 2:GDP components over time and among countries
 
@@ -100,3 +99,58 @@ glimpse(tidy_GDP_data)
 # Let us compare GDP components for these 3 countries
 country_list <- c("United States","India", "Germany")
 ```
+
+First, can you produce this plot?
+
+```{r gdp1, echo=FALSE, out.width="100%"}
+knitr::include_graphics(here::here("images", "gdp1.png"), error = FALSE)
+```
+
+```{r}
+gdp_over_time <- tidy_GDP_data %>% 
+  filter(Country %in% country_list,
+         IndicatorName == c("Gross capital formation", 
+                              "Household expenditure",
+                              "Imports",
+                              "Exports",
+                              "Government expenditure"))
+
+
+gdp_over_time %>% 
+  ggplot(aes(x=year, y=value, colour= IndicatorName)) +
+  geom_line(aes(group=IndicatorName)) +
+  facet_wrap(~Country) +
+  labs(
+    title = "GDP components over time",
+    subtitle= "In constant 2010 USD",
+    y="Billion US$",
+    colour= "Components of GDP"
+  ) +
+  theme_bw() +
+  theme(
+    axis.title.x=element_blank()
+  )
+```
+
+
+
+Secondly, recall that GDP is the sum of Household Expenditure (Consumption *C*), Gross Capital Formation (business investment *I*), Government Expenditure (G) and Net Exports (exports - imports). Even though there is an indicator `Gross Domestic Product (GDP)` in your dataframe, I would like you to calculate it given its components discussed above.
+
+```{r}
+tidy_GDP_calculated <- tidy_GDP_data %>% 
+  pivot_wider(names_from = IndicatorName, values_from = value) %>% 
+  mutate(`Calc_GDP` = `Household expenditure` + `Gross capital formation` + `Government expenditure` + `Exports` - `Imports`,
+         `% Change` = (`Calc_GDP` - `GDP`)/`GDP`)
+```
+
+
+```{r gdp2, echo=FALSE, out.width="100%"}
+knitr::include_graphics(here::here("images", "gdp2.png"), error = FALSE)
+```
+
+
+
+> Examining the plots, one can observe some similarities and differences between the components of GDP in each country. All 3 countries have household expenditure comfortably as the highest component of GDP, and this is to be expected (in the UK for example, “C” accounts for roughly 67% of total GDP and thus the values in the plot look normal). There are however variations in the trend of household income between the 3 countries. In Germany, “C” has remained fairly constant, dropping only during the financial crisis and reflecting lower disposable incomes during the period (leading to a lower propensity to consume).  Consumption in the US has been steadily increasing in this period, largely due to rising incomes and a deeply entrenched consumer culture that promotes spending beyond ones means. India has interestingly seen a decrease in household spending, and economists have theorised that this is down to an income growth slump in both urban and rural areas, causing people to kerb their spending.
+Investment in Germany and the US has not seen tremendous variation, with the US showing its greatest increase in the period of growth in the late 90s and only significant fall predictably during the 2008 Financial Crisis. India on the other hand has seen sharp growth in investment, and this is almost certainly down to government policies aimed at attracting FDI and multinationals into the country, with investment a key driver of growth. 
+Government spending predictably sits higher in Germany and the US  than India and this is expected, as government provision of public goods and services is higher in “developed” economies than “developing”. It is worth noting that the drop in US government spending is likely down to the culture of “small government” that began in the 1970s and has continued through till today.
+Regarding net exports, Germany is the only country to have a positive figure, indicating that exports exceed imports. This is to be expected, as the country has a strong manufacturing sector and exports products worldwide. The other 2 countries are net importers, and this is once more to be expected as the US has moved away from manufacturing towards a service sector economy.
