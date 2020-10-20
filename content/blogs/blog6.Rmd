@@ -3,7 +3,7 @@ title: "Mapping COVID-19 Data"
 date: '2017-10-31T21:28:43-05:00'
 description: ''
 draft: no
-image: pic10.jpg
+image: pic08.jpg
 keywords: ''
 slug: Example_Name2
 categories:
@@ -51,7 +51,7 @@ library(infer)
 The GDP data I looked at is from the [United Nations' National Accounts Main Aggregates Database](https://unstats.un.org/unsd/snaama/Downloads), which contains estimates of total GDP and its components for all countries from 1970 to today. I looked at how GDP and its components have changed over time, and compared different countries and how much each component contributes to that country's GDP. The file I worked with is [GDP and its breakdown at constant 2010 prices in US Dollars](http://unstats.un.org/unsd/amaapi/api/file/6).
 
 
-```{r read_GDP_data}
+```{r read_GDP_data, echo=FALSE}
 
 UN_GDP_data  <-  read_excel(here::here("data", "Download-GDPconstant-USD-countries.xls"), # Excel filename
                 sheet="Download-GDPconstant-USD-countr", # Sheet name
@@ -62,7 +62,7 @@ UN_GDP_data  <-  read_excel(here::here("data", "Download-GDPconstant-USD-countri
 First I tidied the data, as it is in wide format, so I had to change it to long tidy format. Figures are expressed in billions and indicators were renamed.
 
 
-```{r reshape_GDP_data}
+```{r reshape_GDP_data, echo=FALSE}
 UN_GDP_data$IndicatorName %>% unique()
 
 tidy_GDP_data  <- UN_GDP_data %>% 
@@ -89,8 +89,6 @@ tidy_GDP_data  <- UN_GDP_data %>%
          )
   )
 
-
-glimpse(tidy_GDP_data)
 
 
 # Let us compare GDP components for these 3 countries
@@ -125,19 +123,3 @@ gdp_over_time %>%
   )
 ```
 
-
-
-GDP is the sum of Household Expenditure (Consumption *C*), Gross Capital Formation (business investment *I*), Government Expenditure (G) and Net Exports (exports - imports). Though there is an indicator `Gross Domestic Product (GDP)` in the dataframe, I calculated it given its components discussed above.
-
-```{r}
-tidy_GDP_calculated <- tidy_GDP_data %>% 
-  pivot_wider(names_from = IndicatorName, values_from = value) %>% 
-  mutate(`Calc_GDP` = `Household expenditure` + `Gross capital formation` + `Government expenditure` + `Exports` - `Imports`,
-         `% Change` = (`Calc_GDP` - `GDP`)/`GDP`)
-```
-
-
-> Examining the plots, one can observe some similarities and differences between the components of GDP in each country. All 3 countries have household expenditure comfortably as the highest component of GDP, and this is to be expected (in the UK for example, “C” accounts for roughly 67% of total GDP and thus the values in the plot look normal). There are however variations in the trend of household income between the 3 countries. In Germany, “C” has remained fairly constant, dropping only during the financial crisis and reflecting lower disposable incomes during the period (leading to a lower propensity to consume).  Consumption in the US has been steadily increasing in this period, largely due to rising incomes and a deeply entrenched consumer culture that promotes spending beyond ones means. India has interestingly seen a decrease in household spending, and economists have theorised that this is down to an income growth slump in both urban and rural areas, causing people to kerb their spending.
-Investment in Germany and the US has not seen tremendous variation, with the US showing its greatest increase in the period of growth in the late 90s and only significant fall predictably during the 2008 Financial Crisis. India on the other hand has seen sharp growth in investment, and this is almost certainly down to government policies aimed at attracting FDI and multinationals into the country, with investment a key driver of growth. 
-Government spending predictably sits higher in Germany and the US  than India and this is expected, as government provision of public goods and services is higher in “developed” economies than “developing”. It is worth noting that the drop in US government spending is likely down to the culture of “small government” that began in the 1970s and has continued through till today.
-Regarding net exports, Germany is the only country to have a positive figure, indicating that exports exceed imports. This is to be expected, as the country has a strong manufacturing sector and exports products worldwide. The other 2 countries are net importers, and this is once more to be expected as the US has moved away from manufacturing towards a service sector economy.
