@@ -13,4 +13,94 @@ title: Mapping COVID-19 Data
 
 
 
-<p>Test text</p>
+<div id="cdc-covid-19-public-use-data" class="section level1">
+<h1>CDC COVID-19 Public Use Data</h1>
+<p>Let us revisit the <a href="https://data.cdc.gov/Case-Surveillance/COVID-19-Case-Surveillance-Public-Use-Data/vbim-akqf">CDC Covid-19 Case Surveillance Data</a>. There are well over 3 million entries of individual, de-identified patient data. Since this is a large file, I suggest you use <code>vroom</code> to load it and you keep <code>cache=TRUE</code> in the chunk options.</p>
+<pre class="r"><code># file contains 11 variables and 3.66m rows and is well over 380Mb. 
+# It will take time to download
+
+# URL link to CDC to download data
+url &lt;- &quot;https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&quot;
+
+covid_data &lt;- vroom::vroom(url)%&gt;% # If vroom::vroom(url) doesn&#39;t work, use read_csv(url)
+  clean_names()
+  glimpse(covid_data)</code></pre>
+<pre><code>## Rows: 4,481,062
+## Columns: 11
+## $ cdc_report_dt               &lt;date&gt; 2020-03-22, 2020-03-23, 2020-03-15, 20...
+## $ pos_spec_dt                 &lt;date&gt; 2020-03-15, 2020-03-15, 2020-03-15, 20...
+## $ onset_dt                    &lt;date&gt; 2020-03-11, NA, NA, NA, NA, 2020-03-03...
+## $ current_status              &lt;chr&gt; &quot;Laboratory-confirmed case&quot;, &quot;Laborator...
+## $ sex                         &lt;chr&gt; &quot;Female&quot;, &quot;Female&quot;, &quot;Female&quot;, &quot;Female&quot;,...
+## $ age_group                   &lt;chr&gt; &quot;0 - 9 Years&quot;, &quot;0 - 9 Years&quot;, &quot;0 - 9 Ye...
+## $ race_and_ethnicity_combined &lt;chr&gt; &quot;Multiple/Other, Non-Hispanic&quot;, &quot;Unknow...
+## $ hosp_yn                     &lt;chr&gt; &quot;Yes&quot;, &quot;Unknown&quot;, &quot;Missing&quot;, &quot;Missing&quot;,...
+## $ icu_yn                      &lt;chr&gt; &quot;Yes&quot;, &quot;Unknown&quot;, &quot;Missing&quot;, &quot;Missing&quot;,...
+## $ death_yn                    &lt;chr&gt; &quot;No&quot;, &quot;Unknown&quot;, &quot;Missing&quot;, &quot;Missing&quot;, ...
+## $ medcond_yn                  &lt;chr&gt; &quot;Yes&quot;, &quot;Unknown&quot;, &quot;Missing&quot;, &quot;Missing&quot;,...</code></pre>
+<p>Given the data we have, I would like you to produce two graphs that show death % rate:</p>
+<ol style="list-style-type: decimal">
+<li>by age group, sex, and whether the patient had co-morbidities or not</li>
+<li>by age group, sex, and whether the patient was admited to Intensive Care Unit (ICU) or not.</li>
+</ol>
+<pre class="r"><code>## Creating graph no. 1 
+
+# Step 1: filtering variables of interest to exclude missing values
+covid_death_rate_comorbidities &lt;- covid_data %&gt;% 
+  filter(sex %in% c(&#39;Male&#39;,&#39;Female&#39;), !age_group %in% c(&#39;Unknown&#39;, NA), medcond_yn %in% c(&#39;Yes&#39;,&#39;No&#39;),death_yn %in% c(&#39;Yes&#39;,&#39;No&#39;)) %&gt;%  
+
+# Step 2: selecting only the four variables needed for this graph 
+select(sex,age_group,death_yn,medcond_yn) %&gt;%
+
+# Step 3: grouping the variables since we re interested in the death rate across age group, sex and whether the patient had co-morbities or not
+group_by(sex,age_group,medcond_yn) %&gt;% 
+
+# Step 4: calculating the death rate as a percentage value
+summarize(death_tot=sum(death_yn==&#39;Yes&#39;),total=n()) %&gt;% 
+mutate(death_rate=(death_tot/total*100)) %&gt;%
+select(sex,age_group,death_rate,medcond_yn) 
+
+new_labels&lt;-c(&#39;Yes&#39;=&#39;With Comorbidities&#39;,&#39;No&#39;=&#39;Without Comorbidities&#39;)
+
+# Step 5: plotting 
+ggplot(covid_death_rate_comorbidities,aes(x=death_rate,y=age_group))+
+  geom_col(fill=&#39;#8b9dc3&#39;)+
+  facet_grid(medcond_yn~sex,as.table=FALSE,labeller=labeller(medcond_yn=new_labels))+
+  geom_text(aes(label=round(death_rate,digits=1)),hjust=-0.1,size=3)+
+  expand_limits(x=c(2))+
+  theme_bw()+
+  scale_x_continuous ()+
+  labs(title=&#39;Covid death % by age group, sex, and presence of co-morbidities&#39;,x=&#39;&#39;,y=&#39;&#39;,caption=&#39;Source: CDC&#39;)+
+  theme(plot.title=element_text(size=12))</code></pre>
+<p><img src="/blogs/blog5_files/figure-html/covid_challenge-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Creating graph no. 2
+
+# Step 1: filtering variables of interest to exclude missing values
+covid_death_rate_icu &lt;- covid_data %&gt;% 
+  filter(sex %in% c(&#39;Male&#39;,&#39;Female&#39;), !age_group %in% c(&#39;Unknown&#39;, NA), icu_yn %in% c(&#39;Yes&#39;,&#39;No&#39;),death_yn %in% c(&#39;Yes&#39;,&#39;No&#39;)) %&gt;%  
+
+# Step 2: selecting only the four variables needed for this graph 
+select(sex,age_group,death_yn,icu_yn) %&gt;%
+
+# Step 3: grouping the variables since we re interested in the death rate across age group, sex and whether the patient had co-morbities or not
+group_by(sex,age_group,icu_yn) %&gt;% 
+
+# Step 4: calculating the death rate as a percentage value
+summarize(death_tot=sum(death_yn==&#39;Yes&#39;),total=n()) %&gt;% 
+mutate(death_rate=(death_tot/total*100)) %&gt;%
+select(sex,age_group,death_rate,icu_yn) 
+
+new_labels_ICU&lt;-c(&#39;Yes&#39;=&#39;Admitted to ICU&#39;,&#39;No&#39;=&#39;No ICU&#39;)
+
+# Step 5: plotting 
+ggplot(covid_death_rate_icu,aes(x=death_rate,y=age_group))+
+  geom_col(fill=&#39;#ff9984&#39;)+
+  facet_grid(icu_yn~sex,as.table=FALSE,labeller=labeller(icu_yn=new_labels_ICU))+
+  geom_text(aes(label=round(death_rate,digits=1)),hjust=-0.1,size=3)+
+  expand_limits(x=c(2))+
+  theme_bw()+
+  scale_x_continuous ()+
+  labs(title=&#39;Covid death % by age group, sex, and whether patient was admitted to ICU&#39;,x=&#39;&#39;,y=&#39;&#39;,caption=&#39;Source: CDC&#39;)+
+  theme(plot.title=element_text(size=12))</code></pre>
+<p><img src="/blogs/blog5_files/figure-html/covid_challenge-2.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>

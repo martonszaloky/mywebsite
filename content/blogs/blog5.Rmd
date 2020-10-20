@@ -44,12 +44,12 @@ library(infer)
 ```
 
 
-# Challenge 1: CDC COVID-19 Public Use Data
+# CDC COVID-19 Public Use Data
 
-Let us revisit the [CDC Covid-19 Case Surveillance Data](https://data.cdc.gov/Case-Surveillance/COVID-19-Case-Surveillance-Public-Use-Data/vbim-akqf). There are well over 3 million entries of individual, de-identified patient data. Since this is a large file, I suggest you use `vroom` to load it and you keep `cache=TRUE` in the chunk options.
+For the following two graphs I have used the [CDC Covid-19 Case Surveillance Data](https://data.cdc.gov/Case-Surveillance/COVID-19-Case-Surveillance-Public-Use-Data/vbim-akqf). There are over 3 million entries of individual, de-identified patient data. Since this is a large file, I used `vroom` to load it and kept `cache=TRUE` in the chunk options.
 
 
-```{r, cache=TRUE}
+```{r, cache=TRUE, echo=FALSE}
 # file contains 11 variables and 3.66m rows and is well over 380Mb. 
 # It will take time to download
 
@@ -62,16 +62,17 @@ covid_data <- vroom::vroom(url)%>% # If vroom::vroom(url) doesn't work, use read
 
 ```
 
-Given the data we have, I would like you to produce two graphs that show death % rate:
+I produced two graphs that show death % rate:
 
 1. by age group, sex, and whether the patient had co-morbidities or not
-1. by age group, sex, and whether the patient was admited to Intensive Care Unit (ICU) or not.
+2. by age group, sex, and whether the patient was admited to Intensive Care Unit (ICU) or not.
+
+Below you can find both the graphs and the codes used to produce them.
 
 
-```{r covid_challenge, echo=FALSE, out.width="100%"}
+```{r covid_challenge, out.width="100%"}
 
 ## Creating graph no. 1 
-knitr::include_graphics(here::here("images", "covid_death_rate_comorbidities.png"), error = FALSE)
 
 # Step 1: filtering variables of interest to exclude missing values
 covid_death_rate_comorbidities <- covid_data %>% 
@@ -102,7 +103,6 @@ ggplot(covid_death_rate_comorbidities,aes(x=death_rate,y=age_group))+
   theme(plot.title=element_text(size=12))
   
 ## Creating graph no. 2
-knitr::include_graphics(here::here("images", "covid_death_rate_icu.png"), error = FALSE)
 
 # Step 1: filtering variables of interest to exclude missing values
 covid_death_rate_icu <- covid_data %>% 
