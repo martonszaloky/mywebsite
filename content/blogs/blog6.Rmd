@@ -62,7 +62,7 @@ UN_GDP_data  <-  read_excel(here::here("data", "Download-GDPconstant-USD-countri
 First I tidied the data, as it is in wide format, so I had to change it to long tidy format. Figures are expressed in billions and indicators were renamed.
 
 
-```{r reshape_GDP_data, echo=FALSE}
+```{r reshape_GDP_data}
 UN_GDP_data$IndicatorName %>% unique()
 
 tidy_GDP_data  <- UN_GDP_data %>% 
