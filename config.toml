@@ -162,8 +162,8 @@ disqusShortname = ""
   # Contact section
    [params.contact]
     enable = true
-    # buttonSend = "Send message"
-    # buttonClear = "Clear"
+     buttonSend = "Send message"
+     buttonClear = "Clear"
 
     # Since this template is static, the contact form uses www.formspree.io as a
     # proxy. The form makes a POST request to their servers to send the actual
@@ -198,7 +198,7 @@ disqusShortname = ""
   # Footer section
   [params.footer]
     enable = true
-  #  copyright = "Company Name"
+    copyright = "London Business School"
 
     # Uses font awesome icons
     [[params.footer.social]]
