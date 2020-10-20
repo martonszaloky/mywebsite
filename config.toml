@@ -110,8 +110,8 @@ disqusShortname = ""
       url = "blogs/Example_Name3"
 
     [[params.tiles.showcase]]
-      title = "Example 4"
-      subtitle = "Nisl Sed Aliquam"
+      title = "Exploring the yield curve"
+      subtitle = "How often does it invert and what does it mean"
       image = "pic04.jpg"
       url = "blogs/Example_Name4"
 
@@ -148,10 +148,10 @@ disqusShortname = ""
 
 
   # Contact section
-  [params.contact]
-    enable = true
-    buttonSend = "Send message"
-    buttonClear = "Clear"
+  # [params.contact]
+    # enable = true
+    # buttonSend = "Send message"
+    # buttonClear = "Clear"
 
     # Since this template is static, the contact form uses www.formspree.io as a
     # proxy. The form makes a POST request to their servers to send the actual
