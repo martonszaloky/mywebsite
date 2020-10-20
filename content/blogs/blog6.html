@@ -13,17 +13,13 @@ categories:
 
 
 
-<div id="challenge-2gdp-components-over-time-and-among-countries" class="section level1">
-<h1>Challenge 2:GDP components over time and among countries</h1>
-<p>At the risk of oversimplifying things, the main components of gross domestic product, GDP are personal consumption (C), business investment (I), government spending (G) and net exports (exports - imports). You can read more about GDP and the different approaches in calculating at the <a href="https://en.wikipedia.org/wiki/Gross_domestic_product">Wikipedia GDP page</a>.</p>
-<p>The GDP data we will look at is from the <a href="https://unstats.un.org/unsd/snaama/Downloads">United Nations’ National Accounts Main Aggregates Database</a>, which contains estimates of total GDP and its components for all countries from 1970 to today. We will look at how GDP and its components have changed over time, and compare different countries and how much each component contributes to that country’s GDP. The file we will work with is <a href="http://unstats.un.org/unsd/amaapi/api/file/6">GDP and its breakdown at constant 2010 prices in US Dollars</a> and it has already been saved in the Data directory. Have a look at the Excel file to see how it is structured and organised</p>
+<div id="gdp-components-over-time-and-among-countries" class="section level1">
+<h1>GDP components over time and among countries</h1>
+<p>The GDP data I looked at is from the <a href="https://unstats.un.org/unsd/snaama/Downloads">United Nations’ National Accounts Main Aggregates Database</a>, which contains estimates of total GDP and its components for all countries from 1970 to today. I looked at how GDP and its components have changed over time, and compared different countries and how much each component contributes to that country’s GDP. The file I worked with is <a href="http://unstats.un.org/unsd/amaapi/api/file/6">GDP and its breakdown at constant 2010 prices in US Dollars</a>.</p>
 <pre class="r"><code>UN_GDP_data  &lt;-  read_excel(here::here(&quot;data&quot;, &quot;Download-GDPconstant-USD-countries.xls&quot;), # Excel filename
                 sheet=&quot;Download-GDPconstant-USD-countr&quot;, # Sheet name
                 skip=2) # Number of rows to skip</code></pre>
-<p>The first thing you need to do is to tidy the data, as it is in wide format and you must make it into long, tidy format. Please express all figures in billions (divide values by <code>1e9</code>, or <span class="math inline">\(10^9\)</span>), and you want to rename the indicators into something shorter.</p>
-<blockquote>
-<p>make sure you remove <code>eval=FALSE</code> from the next chunk of R code– I have it there so I could knit the document</p>
-</blockquote>
+<p>First I tidied the data, as it is in wide format, so I had to change it to long tidy format. Figures are expressed in billions and indicators were renamed.</p>
 <pre class="r"><code>UN_GDP_data$IndicatorName %&gt;% unique()</code></pre>
 <pre><code>##  [1] &quot;Final consumption expenditure&quot;                                                           
 ##  [2] &quot;Household consumption expenditure (including Non-profit institutions serving households)&quot;
@@ -77,4 +73,39 @@ glimpse(tidy_GDP_data)</code></pre>
 ## $ value         &lt;dbl&gt; 5.56, 5.33, 5.20, 5.75, 6.15, 6.32, 6.37, 6.90, 7.09,...</code></pre>
 <pre class="r"><code># Let us compare GDP components for these 3 countries
 country_list &lt;- c(&quot;United States&quot;,&quot;India&quot;, &quot;Germany&quot;)</code></pre>
+<pre class="r"><code>gdp_over_time &lt;- tidy_GDP_data %&gt;% 
+  filter(Country %in% country_list,
+         IndicatorName == c(&quot;Gross capital formation&quot;, 
+                              &quot;Household expenditure&quot;,
+                              &quot;Imports&quot;,
+                              &quot;Exports&quot;,
+                              &quot;Government expenditure&quot;))
+
+
+gdp_over_time %&gt;% 
+  ggplot(aes(x=year, y=value, colour= IndicatorName)) +
+  geom_line(aes(group=IndicatorName)) +
+  facet_wrap(~Country) +
+  labs(
+    title = &quot;GDP components over time&quot;,
+    subtitle= &quot;In constant 2010 USD&quot;,
+    y=&quot;Billion US$&quot;,
+    colour= &quot;Components of GDP&quot;
+  ) +
+  theme_bw() +
+  theme(
+    axis.title.x=element_blank()
+  )</code></pre>
+<p><img src="/blogs/blog6_files/figure-html/unnamed-chunk-1-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>GDP is the sum of Household Expenditure (Consumption <em>C</em>), Gross Capital Formation (business investment <em>I</em>), Government Expenditure (G) and Net Exports (exports - imports). Though there is an indicator <code>Gross Domestic Product (GDP)</code> in the dataframe, I calculated it given its components discussed above.</p>
+<pre class="r"><code>tidy_GDP_calculated &lt;- tidy_GDP_data %&gt;% 
+  pivot_wider(names_from = IndicatorName, values_from = value) %&gt;% 
+  mutate(`Calc_GDP` = `Household expenditure` + `Gross capital formation` + `Government expenditure` + `Exports` - `Imports`,
+         `% Change` = (`Calc_GDP` - `GDP`)/`GDP`)</code></pre>
+<blockquote>
+<p>Examining the plots, one can observe some similarities and differences between the components of GDP in each country. All 3 countries have household expenditure comfortably as the highest component of GDP, and this is to be expected (in the UK for example, “C” accounts for roughly 67% of total GDP and thus the values in the plot look normal). There are however variations in the trend of household income between the 3 countries. In Germany, “C” has remained fairly constant, dropping only during the financial crisis and reflecting lower disposable incomes during the period (leading to a lower propensity to consume). Consumption in the US has been steadily increasing in this period, largely due to rising incomes and a deeply entrenched consumer culture that promotes spending beyond ones means. India has interestingly seen a decrease in household spending, and economists have theorised that this is down to an income growth slump in both urban and rural areas, causing people to kerb their spending.
+Investment in Germany and the US has not seen tremendous variation, with the US showing its greatest increase in the period of growth in the late 90s and only significant fall predictably during the 2008 Financial Crisis. India on the other hand has seen sharp growth in investment, and this is almost certainly down to government policies aimed at attracting FDI and multinationals into the country, with investment a key driver of growth.
+Government spending predictably sits higher in Germany and the US than India and this is expected, as government provision of public goods and services is higher in “developed” economies than “developing”. It is worth noting that the drop in US government spending is likely down to the culture of “small government” that began in the 1970s and has continued through till today.
+Regarding net exports, Germany is the only country to have a positive figure, indicating that exports exceed imports. This is to be expected, as the country has a strong manufacturing sector and exports products worldwide. The other 2 countries are net importers, and this is once more to be expected as the US has moved away from manufacturing towards a service sector economy.</p>
+</blockquote>
 </div>
