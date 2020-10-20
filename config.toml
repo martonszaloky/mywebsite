@@ -101,7 +101,7 @@ disqusShortname = ""
       title = "GDP Components"
       subtitle = "Tracking changes within the GDPs of nations around the world over time"
       image = "pic02.jpg"
-      url = "blogs/tempus"
+      url = "blogs/Example_Name2"
 
     [[params.tiles.showcase]]
       title = "Example 3"

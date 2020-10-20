@@ -2,13 +2,13 @@
 categories:
 - ""
 - ""
-date: "2017-10-31T22:26:13-05:00"
-description: Tracking GDP component changes
+date: "2017-10-31T21:28:43-05:00"
+description: ""
 draft: false
-image: pic08.jpg
+image: pic10.jpg
 keywords: ""
-slug: tempus
-title: GDP Components
+slug: Example_Name2
+title: Mapping COVID-19 Data
 ---
 
 
