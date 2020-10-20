@@ -47,17 +47,29 @@ disqusShortname = ""
       name = "Home"
       url = "#"
 
-    [[params.navigation.links]]
-      name = "Blogs"
-      url = "blogs"
+  #  [[params.navigation.links]]
+  #    name = "Blogs"
+  #    url = "blogs"
 
     [[params.navigation.links]]
-      name = "Generic Blog"
-      url = "blogs/ipsum"
+      name = "COVID-19"
+      url = "blogs/Example_Name"
 
     [[params.navigation.links]]
-      name = "Elements"
-      url = "elements.html"
+      name = "GDP"
+      url = "blogs/Example_Name2"
+      
+    [[params.navigation.links]]
+      name = "Climate Change"
+      url = "blogs/Example_Name3"
+      
+    [[params.navigation.links]]
+      name = "Yield Curve"
+      url = "blogs/Example_Name4"
+      
+  #  [[params.navigation.links]]
+  #    name = "Elements"
+  #    url = "elements.html"
 
     # Add custom links here by uncommenting code below. To remove links just delete
     # the [[params.navigation.links]] map associated with that link. Copy and paste
@@ -148,8 +160,8 @@ disqusShortname = ""
 
 
   # Contact section
-  # [params.contact]
-    # enable = true
+   [params.contact]
+    enable = true
     # buttonSend = "Send message"
     # buttonClear = "Clear"
 
@@ -185,7 +197,7 @@ disqusShortname = ""
 
   # Footer section
   [params.footer]
-  #  enable = true
+    enable = true
   #  copyright = "Company Name"
 
     # Uses font awesome icons
